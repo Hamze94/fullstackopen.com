@@ -4,7 +4,7 @@ const Content = (props) => {
   return (
     <>
       {props.parts.map(part => {
-        console.log(part);
+        // console.log(part);
         return (
           <p key={part.name}>  {part.name} {part.exercises}</p >
         )
@@ -12,6 +12,7 @@ const Content = (props) => {
       }
     </>
   )
+
 }
 const Total = (props) => {
   const exercisesArray = props.parts.map(part => part.exercises)
