@@ -1,4 +1,5 @@
 import { useState } from 'react'
+const StaticsLine = ({ text, value }) => <p>{text} {value}</p>
 const Statics = ({ good, neutral, bad, totalFeedBack, averageFeedback, positiveFeedback }) => {
   if (totalFeedBack === 0) {
     return (
@@ -11,15 +12,16 @@ const Statics = ({ good, neutral, bad, totalFeedBack, averageFeedback, positiveF
   return (
     <>
       <h1>Statics</h1>
-      <p>Good {good}</p>
-      <p>Neutral {neutral}</p>
-      <p>Bad {bad}</p>
-      <p>All {totalFeedBack}</p>
-      <p>Average {averageFeedback}</p>
-      <p>Positive {positiveFeedback}% </p>
+      <StaticsLine text="Good" value={good} />
+      <StaticsLine text="Neutral" value={neutral} />
+      <StaticsLine text="Bad" value={bad} />
+      <StaticsLine text="All" value={totalFeedBack} />
+      <StaticsLine text="Average" value={averageFeedback} />
+      <StaticsLine text="Positive" value={`${positiveFeedback}%`} />
     </>
   )
 }
+const FeedBackButton = (props) => <button onClick={props.onClick}>{props.text}</button>
 
 const App = () => {
   const [good, setGood] = useState(0)
@@ -34,10 +36,9 @@ const App = () => {
   return (
     <>
       <h1>Given Feed Back </h1>
-      <button onClick={handleGood}>Good</button>
-      <button onClick={handleNeutral}>Neutral</button>
-      <button onClick={handleBad}>Bad</button>
-
+      <FeedBackButton text="good" onClick={handleGood} />
+      <FeedBackButton text="neutral" onClick={handleNeutral} />
+      <FeedBackButton text="bad" onClick={handleBad} />
       <Statics {...{ good, neutral, bad, totalFeedBack, averageFeedback, positiveFeedback }} />
 
     </>
