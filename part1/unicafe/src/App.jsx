@@ -1,5 +1,5 @@
 import { useState } from 'react'
-const StaticsLine = ({ text, value }) => <p>{text} {value}</p>
+const StaticsLine = ({ text, value }) => <tr><td>{text}</td><td>{value}</td></tr>
 const Statics = ({ good, neutral, bad, totalFeedBack, averageFeedback, positiveFeedback }) => {
   if (totalFeedBack === 0) {
     return (
@@ -12,17 +12,20 @@ const Statics = ({ good, neutral, bad, totalFeedBack, averageFeedback, positiveF
   return (
     <>
       <h1>Statics</h1>
-      <StaticsLine text="Good" value={good} />
-      <StaticsLine text="Neutral" value={neutral} />
-      <StaticsLine text="Bad" value={bad} />
-      <StaticsLine text="All" value={totalFeedBack} />
-      <StaticsLine text="Average" value={averageFeedback} />
-      <StaticsLine text="Positive" value={`${positiveFeedback}%`} />
+      <table>
+        <tbody>
+          <StaticsLine text="Good" value={good} />
+          <StaticsLine text="Neutral" value={neutral} />
+          <StaticsLine text="Bad" value={bad} />
+          <StaticsLine text="All" value={totalFeedBack} />
+          <StaticsLine text="Average" value={averageFeedback} />
+          <StaticsLine text="Positive" value={`${positiveFeedback}%`} />
+        </tbody>
+      </table>
     </>
   )
 }
 const FeedBackButton = (props) => <button onClick={props.onClick}>{props.text}</button>
-
 const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
