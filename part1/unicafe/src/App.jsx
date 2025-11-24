@@ -1,5 +1,13 @@
 import { useState } from 'react'
 const Statics = ({ good, neutral, bad, totalFeedBack, averageFeedback, positiveFeedback }) => {
+  if (totalFeedBack === 0) {
+    return (
+      <>
+        <h1>Statics</h1>
+        <p>No feed back given</p>
+      </>
+    )
+  }
   return (
     <>
       <h1>Statics</h1>
@@ -29,6 +37,7 @@ const App = () => {
       <button onClick={handleGood}>Good</button>
       <button onClick={handleNeutral}>Neutral</button>
       <button onClick={handleBad}>Bad</button>
+
       <Statics {...{ good, neutral, bad, totalFeedBack, averageFeedback, positiveFeedback }} />
 
     </>
