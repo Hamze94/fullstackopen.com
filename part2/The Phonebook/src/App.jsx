@@ -16,7 +16,7 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
       return
     }
-    const personObject = { name: newName, phone: newNumber }
+    const personObject = { name: newName, number: newNumber }
     setPersons(persons.concat(personObject))
     setNewName('')
     setNewNumber('')
@@ -50,7 +50,7 @@ const App = () => {
       <h2>Numbers</h2>
       list of persons
       {filteredPersons.map((person, index) =>
-        <p key={index}>{person.name} {person.phone}</p>
+        <p key={index}>{person.name} {person.number}</p>
       )}
     </div>
   )
