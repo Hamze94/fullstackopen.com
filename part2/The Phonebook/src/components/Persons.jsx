@@ -1,10 +1,23 @@
+import axios from 'axios'
 import React from 'react'
-
-const Persons = ({ persons }) => {
+import contactService from '../services/contact'
+const Persons = ({ persons, setPersons }) => {
+    const handleDelete = (person) => {
+        console.log('Delete id', person.id)
+        if (window.confirm(`delete  ${person.name} ?`)) {
+            contactService.remove(person.id).then(() => {
+                console.log(`Deleted contact with id ${person.id}`)
+                setPersons(persons.filter(p => p.id !== person.id))
+            })
+        }
+    }
     return (
         <div>
-            {persons.map((person, index) =>
-                <p key={index}>{person.name} {person.number}</p>
+            {persons.map((person) =>
+                <p key={person.id}>
+                    {person.name} {person.number}
+                    <button onClick={() => handleDelete(person)}>delete</button>
+                </p>
             )}
         </div>
     )
