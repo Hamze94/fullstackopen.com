@@ -10,12 +10,13 @@ const App = () => {
     axios
       .get('http://localhost:3001/persons')
       .then(response => {
-        console.log('promise fulfilled')
+        console.log('promise fulfilled', response.data)
         setPersons(response.data)
       })
   }, [])
   const [searchTerm, setSearchTerm] = useState('')
   const filteredPersons = persons.filter(person =>
+    console.log(person) ||
     person.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
