@@ -3,20 +3,17 @@ import { useEffect, useState } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import contactService from './services/contact'
 const App = () => {
   const [persons, setPersons] = useState([])
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled', response.data)
-        setPersons(response.data)
-      })
+    contactService.getAll().then(initialContacts => {
+      setPersons(initialContacts)
+    })
   }, [])
   const [searchTerm, setSearchTerm] = useState('')
   const filteredPersons = persons.filter(person =>
-    console.log(person) ||
     person.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 

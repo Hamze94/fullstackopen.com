@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useState } from 'react'
+import contactService from '../services/contact'
 
 const PersonForm = ({ persons, setPersons }) => {
     const [newName, setNewName] = useState('')
@@ -12,13 +13,11 @@ const PersonForm = ({ persons, setPersons }) => {
             return
         }
         const personObject = { name: newName, number: newNumber }
-        axios.post('http://localhost:3001/persons', personObject)
-            .then(response => {
-                console.log(response.data)
-                setPersons(persons.concat(response.data))
-                setNewName('')
-                setNewNumber('')
-            })
+        contactService.create(personObject).then(returnedPerson => {
+            setPersons(persons.concat(returnedPerson))
+            setNewName('')
+            setNewNumber('')
+        })
 
     }
     const handleNameChange = (event) => {
