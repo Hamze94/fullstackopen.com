@@ -2,9 +2,10 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import contactService from '../services/contact'
 
-const PersonForm = ({ persons, setPersons }) => {
+const PersonForm = ({ persons, setPersons, showNotification }) => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
+
     const handleSubmit = (event) => {
         event.preventDefault()
         const existingPerson = persons.find(person => person.name === newName)
@@ -15,6 +16,10 @@ const PersonForm = ({ persons, setPersons }) => {
                     setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson))
                     setNewName('')
                     setNewNumber('')
+                    showNotification(`Updated ${returnedPerson.name}'s number`, 'success')
+                }).catch(error => {
+                    showNotification(`Information of ${newName} has already been removed from server`, 'error')
+                    setPersons(persons.filter(person => person.id !== existingPerson.id))
                 })
             }
             return
@@ -25,6 +30,9 @@ const PersonForm = ({ persons, setPersons }) => {
             setPersons(persons.concat(returnedPerson))
             setNewName('')
             setNewNumber('')
+            showNotification(`Added ${returnedPerson.name}`, 'success')
+        }).catch(error => {
+            showNotification('Failed to add contact', 'error')
         })
 
     }
