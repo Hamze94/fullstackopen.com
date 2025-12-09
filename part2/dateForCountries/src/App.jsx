@@ -5,7 +5,6 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filteredCountries, setFilteredCountries] = useState([])
   const [allCountries, setAllCountries] = useState([])
-
   useEffect(() => {
     axios.get('https://studies.cs.helsinki.fi/restcountries/api/all').then((response) => {
       console.log(response.data)
@@ -21,11 +20,12 @@ function App() {
       )
       setFilteredCountries(filter)
     }
-
   }, [searchTerm, allCountries]);
   const handleChange = (event) => {
     setSearchTerm(event.target.value)
-
+  }
+  const handleShow = (countryName) => {
+    setSearchTerm(countryName)
   }
   return (
     <>
@@ -52,10 +52,14 @@ function App() {
             </div>
           ) : (
             filteredCountries.map((country) => (
-              <p key={country.name.common}>{country.name.common}</p>
+              <p key={country.name.common}>
+                {country.name.common}
+                <button onClick={() => handleShow(country.name.common)} >Show</button>
+              </p>
             ))
           )
         }
+
       </div>
     </>
   )
