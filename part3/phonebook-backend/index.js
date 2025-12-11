@@ -33,11 +33,19 @@ app.get('/info', (request, response) => {
         </div>
     `);
 });
+
 app.get('/api/persons', (request, response) => {
-    console.log(`Request received at: ${timeNow}`);
     response.json(persons);
 });
-
+app.get('/api/persons/:id', (request, response) => {
+    const id = request.params.id;
+    const person = persons.find(person => person.id === id);
+    if (person) {
+        response.json(person);
+    } else {
+        response.status(404).end();
+    }
+})
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
