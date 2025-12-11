@@ -24,7 +24,19 @@ let persons = [
         "number": "39-23-6423122"
     }
 ]
+app.get('/info', (request, response) => {
+    const timeNow = new Date();
+    response.send(`
+        <div>
+            <p>Phonebook has info for ${persons.length} people</p>
+            <p>${timeNow}</p>
+        </div>
+    `);
+});
+
+app.get('/info', (request, response) => { response.send(info()) })
 app.get('/api/persons', (request, response) => {
+    console.log(`Request received at: ${timeNow}`);
     response.json(persons);
 });
 
