@@ -33,8 +33,6 @@ app.get('/info', (request, response) => {
         </div>
     `);
 });
-
-app.get('/info', (request, response) => { response.send(info()) })
 app.get('/api/persons', (request, response) => {
     console.log(`Request received at: ${timeNow}`);
     response.json(persons);
