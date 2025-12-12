@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3001;
-
+app.use(express.json());
 let persons = [
     {
         "id": "1",
@@ -50,6 +50,24 @@ app.delete('/api/persons/:id', (request, response) => {
     const id = request.params.id;
     persons = persons.filter(person => person.id !== id);
     response.status(204).end();
+});
+app.post('/api/persons', (request, response) => {
+    const body = request.body;
+    console.log(body)
+    if (!body.name || !body.number) {
+        return response.status(400).json({ error: 'name or number is missing' });
+    }
+    const nameExists = persons.find(person => person.name === body.name);
+    if (nameExists) {
+        return response.status(400).json({ error: 'name must be unique' });
+    }
+    const newPerson = {
+        id: (Math.floor(Math.random() * 10000)).toString(),
+        name: body.name,
+        number: body.number
+    };
+    persons = persons.concat(newPerson);
+    response.status(201).json(newPerson);
 });
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
