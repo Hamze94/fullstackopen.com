@@ -1,7 +1,19 @@
 const express = require('express');
+const morgan = require('morgan')
 const app = express();
 const port = 3001;
 app.use(express.json());
+app.use(morgan(function (tokens, req, res) {
+    return [
+        tokens.method(req, res),
+        tokens.url(req, res),
+        tokens.status(req, res),
+        tokens.res(req, res, 'content-length'), '-',
+        tokens['response-time'](req, res), 'ms',
+        JSON.stringify(req.body)
+    ].join(' ')
+}))
+
 let persons = [
     {
         "id": "1",
@@ -53,7 +65,7 @@ app.delete('/api/persons/:id', (request, response) => {
 });
 app.post('/api/persons', (request, response) => {
     const body = request.body;
-    console.log(body)
+    // console.log(body)
     if (!body.name || !body.number) {
         return response.status(400).json({ error: 'name or number is missing' });
     }
