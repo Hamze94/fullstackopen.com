@@ -85,5 +85,5 @@ app.post('/api/persons', (request, response) => {
     response.status(201).json(newPerson);
 });
 app.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+    console.log(`Server is running at http://localhost:${PORT}`);
 });
