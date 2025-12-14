@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan')
 const cors = require('cors');
 const app = express();
-const port = 3001;
+const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors());
 
@@ -84,6 +84,6 @@ app.post('/api/persons', (request, response) => {
     persons = persons.concat(newPerson);
     response.status(201).json(newPerson);
 });
-app.listen(port, () => {
+app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
