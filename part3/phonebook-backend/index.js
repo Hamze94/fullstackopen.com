@@ -5,7 +5,6 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(cors());
-
 app.use(morgan(function (tokens, req, res) {
     return [
         tokens.method(req, res),
@@ -16,6 +15,7 @@ app.use(morgan(function (tokens, req, res) {
         JSON.stringify(req.body)
     ].join(' ')
 }))
+app.use(express.static('dist'));
 
 let persons = [
     {
