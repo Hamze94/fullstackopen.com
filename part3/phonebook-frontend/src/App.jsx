@@ -14,6 +14,7 @@ const App = () => {
     })
   }, [])
   const [searchTerm, setSearchTerm] = useState('')
+  console.log(persons)
   const filteredPersons = persons.filter(person =>
     person.name.toLowerCase().includes(searchTerm.toLowerCase())
   )

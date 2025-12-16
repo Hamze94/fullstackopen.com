@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan')
 const cors = require('cors');
+const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3001;
 app.use(express.json());
@@ -15,8 +16,6 @@ app.use(morgan(function (tokens, req, res) {
         JSON.stringify(req.body)
     ].join(' ')
 }))
-app.use(express.static('dist'));
-
 let persons = [
     {
         "id": "1",
@@ -84,6 +83,7 @@ app.post('/api/persons', (request, response) => {
     persons = persons.concat(newPerson);
     response.status(201).json(newPerson);
 });
+app.use(express.static(path.join(__dirname, 'dist'),));
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
 });
