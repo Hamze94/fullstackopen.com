@@ -80,21 +80,18 @@ app.delete('/api/persons/:id', (request, response) => {
 });
 app.post('/api/persons', (request, response) => {
     const body = request.body;
-    // console.log(body)
-    if (!body.name || !body.number) {
-        return response.status(400).json({ error: 'name or number is missing' });
-    }
-    const nameExists = persons.find(person => person.name === body.name);
-    if (nameExists) {
-        return response.status(400).json({ error: 'name must be unique' });
-    }
+
     const newPerson = {
-        id: (Math.floor(Math.random() * 10000)).toString(),
         name: body.name,
         number: body.number
     };
-    persons = persons.concat(newPerson);
-    response.status(201).json(newPerson);
+    Person.create(newPerson)
+        .then(person => {
+            response.status(201).json(person);
+        })
+        .catch(error => {
+            response.status(400).json({ error: error.message });
+        });
 });
 app.use(express.static(path.join(__dirname, 'dist'),));
 app.listen(PORT, () => {
