@@ -79,9 +79,8 @@ app.delete('/api/persons/:id', (request, response, next) => {
         response.status(204).end();
     }).catch(error => next(error));
 });
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body;
-
     const newPerson = {
         name: body.name,
         number: body.number
@@ -90,9 +89,16 @@ app.post('/api/persons', (request, response) => {
         .then(person => {
             response.status(201).json(person);
         })
-        .catch(error => {
-            response.status(400).json({ error: error.message });
-        });
+        .catch(error => next(error));
+});
+app.put('/api/persons/:id', (request, response, next) => {
+    const id = request.params.id;
+    const body = request.body;
+    Person.findByIdAndUpdate(id, { number: body.number }, { new: true })
+        .then(updatedPerson => {
+            response.status(201).json(updatedPerson);
+        })
+        .catch(error => next(error));
 });
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
