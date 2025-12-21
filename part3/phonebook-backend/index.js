@@ -1,14 +1,14 @@
-require('dotenv').config();
-const mongoose = require('mongoose');
-const express = require('express');
+require('dotenv').config()
+const mongoose = require('mongoose')
+const express = require('express')
 const morgan = require('morgan')
-const cors = require('cors');
-const path = require('path');
-const Person = require('./models/person');
-const app = express();
-const PORT = process.env.PORT || 3001;
-app.use(express.json());
-app.use(cors());
+const cors = require('cors')
+const path = require('path')
+const Person = require('./models/person')
+const app = express()
+const PORT = process.env.PORT || 3001
+app.use(express.json())
+app.use(cors())
 app.use(morgan(function (tokens, req, res) {
     return [
         tokens.method(req, res),
@@ -21,7 +21,7 @@ app.use(morgan(function (tokens, req, res) {
 }))
 const url = process.env.MONGODB_URL
 mongoose.connect(url, { family: 4 })
-    .then(result => {
+    .then(() => {
         console.log('connected to MongoDB')
     })
     .catch((error) => {
@@ -30,58 +30,58 @@ mongoose.connect(url, { family: 4 })
 app.get('/info', (request, response, next) => {
     Person.countDocuments({})
         .then(count => {
-            const timeNow = new Date();
+            const timeNow = new Date()
             response.send(`
                 <div>
                     <p>Phonebook has info for ${count} people</p>
                     <p>${timeNow}</p>
                 </div>
-            `);
+            `)
         })
-        .catch(error => next(error));
-});
+        .catch(error => next(error))
+})
 app.get('/api/persons', (request, response) => {
     Person.find({}).then(persons => {
-        response.json(persons);
+        response.json(persons)
     })
-});
+})
 app.get('/api/persons/:id', (request, response, next) => {
-    const id = request.params.id;
+    const id = request.params.id
     Person.findById(id).then(person => {
         if (person) {
-            response.json(person);
+            response.json(person)
         } else {
-            response.status(404).end();
+            response.status(404).end()
         }
-    }).catch(error => next(error));
+    }).catch(error => next(error))
 })
 app.delete('/api/persons/:id', (request, response, next) => {
-    const id = request.params.id;
+    const id = request.params.id
     Person.findByIdAndDelete(id).then(() => {
-        response.status(204).end();
-    }).catch(error => next(error));
-});
+        response.status(204).end()
+    }).catch(error => next(error))
+})
 app.post('/api/persons', (request, response, next) => {
-    const body = request.body;
+    const body = request.body
     const newPerson = {
         name: body.name,
         number: body.number
-    };
+    }
     Person.create(newPerson)
         .then(person => {
-            response.status(201).json(person);
+            response.status(201).json(person)
         })
-        .catch(error => next(error));
-});
+        .catch(error => next(error))
+})
 app.put('/api/persons/:id', (request, response, next) => {
-    const id = request.params.id;
-    const body = request.body;
+    const id = request.params.id
+    const body = request.body
     Person.findByIdAndUpdate(id, { number: body.number }, { new: true })
         .then(updatedPerson => {
-            response.status(201).json(updatedPerson);
+            response.status(201).json(updatedPerson)
         })
-        .catch(error => next(error));
-});
+        .catch(error => next(error))
+})
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
     if (error.name === 'CastError') {
@@ -92,7 +92,7 @@ const errorHandler = (error, request, response, next) => {
     next(error)
 }
 app.use(errorHandler)
-app.use(express.static(path.join(__dirname, 'dist'),));
+app.use(express.static(path.join(__dirname, 'dist'),))
 app.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}`);
-});
+    console.log(`Server is running at http://localhost:${PORT}`)
+})
