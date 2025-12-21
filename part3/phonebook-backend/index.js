@@ -73,13 +73,11 @@ app.get('/api/persons/:id', (request, response) => {
         response.status(404).end();
     }
 })
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     const id = request.params.id;
     Person.findByIdAndDelete(id).then(() => {
         response.status(204).end();
-    }).catch(error => {
-        response.status(400).json({ error: error.message });
-    });
+    }).catch(error => next(error));
 });
 app.post('/api/persons', (request, response) => {
     const body = request.body;
@@ -96,6 +94,14 @@ app.post('/api/persons', (request, response) => {
             response.status(400).json({ error: error.message });
         });
 });
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+    next(error)
+}
+app.use(errorHandler)
 app.use(express.static(path.join(__dirname, 'dist'),));
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
