@@ -32,9 +32,8 @@ const PersonForm = ({ persons, setPersons, showNotification }) => {
             setNewNumber('')
             showNotification(`Added ${returnedPerson.name}`, 'success')
         }).catch(error => {
-            showNotification('Failed to add contact', 'error')
+            showNotification(error.response.data.error, 'error')
         })
-
     }
     const handleNameChange = (event) => {
         setNewName(event.target.value)
