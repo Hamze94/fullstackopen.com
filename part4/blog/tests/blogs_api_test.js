@@ -74,6 +74,30 @@ test('blog without likes defaults to 0', async () => {
     const response = await api.get('/api/blogs')
     assert.strictEqual(response.body[2].likes, 0)
 })
+test('blog without title or url returns 400', async () => {
+    const newBlogMissingTitle = {
+        author: 'New Author',
+        url: 'http://newtestblog.com',
+        likes: 0
+    }
+
+    const newBlogMissingUrl = {
+        title: 'Blog Without URL',
+        author: 'New Author',
+        likes: 0
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlogMissingTitle)
+        .expect(400)
+
+    await api
+        .post('/api/blogs')
+        .send(newBlogMissingUrl)
+        .expect(400)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
