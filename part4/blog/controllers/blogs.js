@@ -3,20 +3,14 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/Blog')
 
 blogsRouter.get('/', async (request, response) => {
-    try {
-        const blogs = await Blog.find({})
-        response.json(blogs)
-    } catch (error) {
-        response.status(500).json({ error: 'Internal Server Error' })
-    }
+    const blogs = await Blog.find({})
+    response.json(blogs)
 })
 
-blogsRouter.post('/', (request, response) => {
+blogsRouter.post('/', async (request, response) => {
     const blog = new Blog(request.body)
-
-    blog.save().then((result) => {
-        response.status(201).json(result)
-    })
+    const blogSaved = await blog.save()
+    response.status(201).json(blogSaved)
 })
 
 module.exports = blogsRouter
