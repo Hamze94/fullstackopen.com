@@ -27,7 +27,7 @@ beforeEach(async () => {
     await blog1.save()
     await blog2.save()
 })
-test.only('blog list application returns the correct amount of blog posts in JSON format', async () => {
+test('blog list application returns the correct amount of blog posts in JSON format', async () => {
     const response = await api
         .get('/api/blogs')
         .expect(200)
@@ -36,7 +36,13 @@ test.only('blog list application returns the correct amount of blog posts in JSO
     assert.strictEqual(response.body.length, 2)
 
 })
+test('unique identifier property is named id', async () => {
+    const response = await api.get('/api/blogs')
+    assert('id' in response.body[0])
+    assert.strictEqual(typeof response.body[0].id, 'string')
+})
 
 after(async () => {
     await mongoose.connection.close()
 })
+
