@@ -42,6 +42,8 @@ test('unique identifier property is named id', async () => {
     assert.strictEqual(typeof response.body[0].id, 'string')
 })
 test('a valid blog can be added', async () => {
+    const blogsAtStart = await api.get('/api/blogs')
+    const initialCount = blogsAtStart.body.length
     const newBlog = {
         title: 'New Test Blog',
         author: 'New Author',
@@ -56,7 +58,7 @@ test('a valid blog can be added', async () => {
         .expect('Content-Type', /application\/json/)
 
     const response = await api.get('/api/blogs')
-    assert.strictEqual(response.body.length, 3)
+    assert.strictEqual(response.body.length, initialCount + 1)
 })
 test('blog without likes defaults to 0', async () => {
     const newBlog = {
@@ -96,6 +98,19 @@ test('blog without title or url returns 400', async () => {
         .post('/api/blogs')
         .send(newBlogMissingUrl)
         .expect(400)
+})
+
+test('a blog can be deleted', async () => {
+    const blogsAtStart = await api.get('/api/blogs')
+    console.log(blogsAtStart.body)
+    const blogToDelete = blogsAtStart.body[0]
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+    const blogsAtEnd = await api.get('/api/blogs')
+    assert.strictEqual(blogsAtEnd.body.length, blogsAtStart.body.length - 1)
+    const ids = blogsAtEnd.body.map(b => b.id)
+    assert(!ids.includes(blogToDelete.id))
 })
 
 after(async () => {
