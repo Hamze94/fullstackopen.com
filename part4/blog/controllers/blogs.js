@@ -25,5 +25,20 @@ blogsRouter.delete('/:id', async (request, response) => {
         response.status(400).json({ error: 'Bad Request' })
     }
 })
+blogsRouter.put('/:id', async (request, response) => {
+    const { likes } = request.body
+    const updatedBlog = await Blog.findById(request.params.id)
+    if (!updatedBlog) {
+        return response.status(404).json({ error: 'Blog not found' })
+    }
+    try {
+        updatedBlog.likes = likes
+        const savedBlog = await updatedBlog.save()
+        response.json(savedBlog)
+    } catch (error) {
+        response.status(400).json({ error: 'Bad Request' })
+    }
 
+
+})
 module.exports = blogsRouter
