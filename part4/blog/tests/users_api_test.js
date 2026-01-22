@@ -7,7 +7,7 @@ const assert = require('assert')
 const User = require('../models/User')
 const helper = require('../utils/test_helper')
 const api = supertest(app)
-describe('when there is initially one user in db', () => {
+describe('when there is initially one user in ', () => {
     beforeEach(async () => {
         await User.deleteMany({})
         const salt = await bcrypt.genSalt(10);
