@@ -21,8 +21,6 @@ describe('when there is initially one user in db', () => {
     beforeEach(async () => {
         // Clear all users more efficiently
         await User.deleteMany({}).maxTimeMS(5000) // Set timeout for this operation
-
-        // Create test user
         const passwordHash = await bcrypt.hash('sekret', 10)
         await User.create({
             username: 'root',
