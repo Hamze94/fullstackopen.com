@@ -1,38 +1,57 @@
 
 const blogsRouter = require('express').Router()
+const jwt = require('jsonwebtoken');
 const Blog = require('../models/Blog')
 const User = require('../models/User')
-
+const getTokenFrom = request => {
+    const authorization = request.get('authorization');
+    if (authorization && authorization.startsWith('Bearer ')) {
+        return authorization.replace('Bearer ', '');
+    }
+    return null;
+};
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
     response.json(blogs)
 })
 
 blogsRouter.post('/', async (request, response) => {
+
     try {
-        const user = await User.findOne({})
+        const body = request.body;
+        const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+        if (!decodedToken.id) {
+            return response.status(401).json({ error: 'token invalid' });
+        }
+        const user = await User.findById(decodedToken.id);
         if (!user) {
-            return response.status(400).json({
-                error: 'No users found. Create a user first.'
-            })
+            return response.status(401).json({ error: 'user not found' });
         }
         const blog = new Blog({
-            ...request.body,
+            title: body.title,
+            author: body.author,
+            url: body.url,
+            likes: body.likes || 0,
             user: user._id
-        })
-        const savedBlog = await blog.save()
-        user.blogs = user.blogs.concat(savedBlog._id)
-        await user.save()
+        });
+        const savedBlog = await blog.save();
+        user.blogs = user.blogs.concat(savedBlog._id);
+        await user.save();
         const populatedBlog = await Blog.findById(savedBlog._id)
-            .populate('user', { username: 1, name: 1 })
+            .populate('user', { username: 1, name: 1 });
+        response.status(201).json(populatedBlog);
 
-        response.status(201).json(populatedBlog)
     } catch (error) {
-        console.error(error)
-        response.status(400).json({ error: 'Bad Request' })
+        if (error.name === 'JsonWebTokenError') {
+            return response.status(401).json({ error: 'token invalid' });
+        }
+        if (error.name === 'TokenExpiredError') {
+            return response.status(401).json({ error: 'token expired' });
+        }
+        console.error(error);
+        response.status(500).json({ error: 'something went wrong' });
     }
-})
-
+});
 blogsRouter.delete('/:id', async (request, response) => {
     try {
         await Blog.findByIdAndDelete(request.params.id)
